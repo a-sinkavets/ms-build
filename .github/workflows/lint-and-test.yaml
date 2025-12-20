@@ -31,9 +31,11 @@ jobs:
       
       - name: Lint with flake8
         run: |
-          echo "## Lint Results" >> $GITHUB_STEP_SUMMARY
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics > lint_output.txt 2>&1 || true
+          echo "Running flake8 linting..."
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics | tee lint_output.txt || true
           ERROR_COUNT=$(grep -c "^" lint_output.txt || echo "0")
+          echo "Total lines in output: $ERROR_COUNT"
+          echo "## Lint Results" >> $GITHUB_STEP_SUMMARY
           if [ "$ERROR_COUNT" -gt 0 ]; then
             echo "❌ Found $ERROR_COUNT linting issue(s)" >> $GITHUB_STEP_SUMMARY
           else
@@ -46,18 +48,21 @@ jobs:
       
       - name: Run tests
         run: |
-          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
-          pytest -v --tb=short --junit-xml=pytest-report.xml > test_output.txt 2>&1 || true
+          echo "Running pytest with verbose output..."
+          pytest -vv --tb=short --junit-xml=pytest-report.xml | tee test_output.txt || true
           PASSED=$(grep -oP '\d+(?= passed)' test_output.txt || echo "0")
           FAILED=$(grep -oP '\d+(?= failed)' test_output.txt || echo "0")
+          echo "Test summary: Passed=$PASSED, Failed=$FAILED"
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed: $PASSED | ❌ Failed: $FAILED" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
       
       - name: Run tests verbose on failure
         if: failure()
         run: |
+          echo "Re-running tests with maximum verbosity..."
+          pytest -vv --tb=long | tee detailed_test_output.txt || true
           echo "## Detailed Test Results (Failure)" >> $GITHUB_STEP_SUMMARY
-          pytest -vv --tb=long 2>&1 | tee detailed_test_output.txt || true
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           cat detailed_test_output.txt >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
