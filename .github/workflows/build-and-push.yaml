@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_URL: ${{ env.REGISTRY_URL }}
-  REGISTRY_USERNAME: ${{ env.REGISTRY_USERNAME }}
-  REGISTRY_KEY: ${{ secrets.REGISTRY_KEY }}
   IMAGE_NAME: trouble-generator
 
 jobs:
@@ -60,15 +57,15 @@ jobs:
       - name: Log in to Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY_URL }}
-          username: ${{ env.REGISTRY_USERNAME }}
-          password: ${{ env.REGISTRY_KEY }}
+          registry: ${{ vars.REGISTRY_URL }}
+          username: ${{ vars.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_KEY }}
       
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY_URL }}/${{ env.IMAGE_NAME }}
+          images: ${{ vars.REGISTRY_URL }}/${{ env.IMAGE_NAME }}
           tags: |
             type=semver,pattern={{version}}
             type=ref,event=branch
