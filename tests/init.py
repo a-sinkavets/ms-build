@@ -1,1 +1,1 @@
-"""Test suite for error_generator application."""
+"""Test suite for error_generator."""

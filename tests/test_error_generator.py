@@ -5,9 +5,6 @@ import pytest
 from unittest.mock import patch
 from error_generator import get_int_env, get_float_env, get_bool_env
 
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
-
 
 class TestGetIntEnv:
     """Test suite for get_int_env function."""
