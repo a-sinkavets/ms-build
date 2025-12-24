@@ -42,10 +42,10 @@ jobs:
       - name: Test Docker image
         timeout-minutes: 2
         run: |
-          timeout 60s docker run --rm
-            -e MIN_EXIT_CODE=1
-            -e MAX_EXIT_CODE=100
-            -e DRY_RUN=true
+          timeout 60s docker run --rm \
+            -e MIN_EXIT_CODE=1 \
+            -e MAX_EXIT_CODE=100 \
+            -e DRY_RUN=true \
             ${{ env.IMAGE_NAME }}:test
 
   push:
