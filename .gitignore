@@ -11,3 +11,4 @@ build/
 .eggs/
 .coverage
 pytest-report.xml
+lint_output.txt

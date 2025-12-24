@@ -1,6 +1,4 @@
 """Comprehensive tests for error_generator module."""
-import os
-import sys
 import pytest
 from unittest.mock import patch
 from error_generator import get_int_env, get_float_env, get_bool_env

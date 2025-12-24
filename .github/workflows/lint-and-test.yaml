@@ -32,12 +32,16 @@ jobs:
       - name: Lint with flake8
         run: |
           echo "Running flake8 linting..."
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics | tee lint_output.txt || true
-          ERROR_COUNT=$(grep -c "^" lint_output.txt || echo "0")
-          echo "Total lines in output: $ERROR_COUNT"
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exit-zero > lint_output.txt
+          ERROR_COUNT=$(tail -n 1 lint_output.txt | grep -oP '^\d+' || echo "0")
+          echo "Total errors found: $ERROR_COUNT"
           echo "## Lint Results" >> $GITHUB_STEP_SUMMARY
           if [ "$ERROR_COUNT" -gt 0 ]; then
-            echo "❌ Found $ERROR_COUNT linting issue(s)" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Found $ERROR_COUNT linting error(s)" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat lint_output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            exit 1
           else
             echo "✅ No linting issues found" >> $GITHUB_STEP_SUMMARY
           fi
