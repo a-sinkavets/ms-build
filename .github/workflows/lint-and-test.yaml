@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - develop
+    paths-ignore:
+      - charts/**
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - charts/**
   # for tests
   workflow_dispatch:
 
