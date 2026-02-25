@@ -1,0 +1,28 @@
+replicaCount: 1
+
+image:
+  repository: trouble-generator
+  pullPolicy: IfNotPresent
+  tag: "0.1.0"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+env:
+  MIN_EXIT_CODE: "10"
+  MAX_EXIT_CODE: "199"
+  INTERVAL_SECONDS: "5"
+  SPECIAL_EXIT_CODE: "200"
+  SPECIAL_CODE_CHANCE: "0.3"
+  DRY_RUN: "false"
